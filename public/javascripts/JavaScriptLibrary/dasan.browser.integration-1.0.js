@@ -177,8 +177,8 @@
    */
 
   // ysw check CHECK POINT
-  //var prodExtensionId = "gbaaffppekiinapleoblkaladhdigoii";  // store version id 
-  var prodExtensionId = "ngjceldinccjmpfabhiiacmepackdedl"; // local test version id
+  var prodExtensionId = "gbaaffppekiinapleoblkaladhdigoii";  // store version id 
+  //var prodExtensionId = "ngjceldinccjmpfabhiiacmepackdedl"; // local test version id
   
   /**
    * Id of beta release of browser plugin (no chrome extension changes in current beta, hence set to prod id)
