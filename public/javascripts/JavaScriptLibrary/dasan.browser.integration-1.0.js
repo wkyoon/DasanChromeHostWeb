@@ -171,7 +171,7 @@
    * Is the current version a beta ?
    */
 
-  var isBeta = /*#__PURE__*/apiVersion.includes("beta");
+  var isBeta = false;/*#__PURE__apiVersion.includes("beta")*/
   /**
    * Id of proper (production) release of browser plugin.
    */
