@@ -171,15 +171,13 @@
    * Is the current version a beta ?
    */
 
-  var isBeta = false;/*#__PURE__apiVersion.includes("beta")*/
+  var isBeta = /*#__PURE__*/apiVersion.includes("beta");
   /**
    * Id of proper (production) release of browser plugin.
    */
 
   // ysw check CHECK POINT
-  var prodExtensionId = "gbaaffppekiinapleoblkaladhdigoii";  // store version id 
-  //var prodExtensionId = "ngjceldinccjmpfabhiiacmepackdedl"; // local test version id
-  
+  var prodExtensionId = "gbaaffppekiinapleoblkaladhdigoii";
   /**
    * Id of beta release of browser plugin (no chrome extension changes in current beta, hence set to prod id)
    */
@@ -432,8 +430,8 @@
           var eventApiClientId = event.data.apiClientId || "";
           var requestId = event.data.requestId || ""; // Only accept responses from our own requests or from device.
 
-
-            //logger.trace("Receiving event from content script: " + JSON.stringify(event.data)); // For backwards compatibility a blank message might be send as "na".
+          if (apiClientId === eventApiClientId || eventApiClientId === "") {
+            logger.trace("Receiving event from content script: " + JSON.stringify(event.data)); // For backwards compatibility a blank message might be send as "na".
 
             if (event.data.message === "na") {
               delete event.data.message;
@@ -446,12 +444,12 @@
             }
 
             if (event.data.message) {
-              //logger.trace("Got message: " + JSON.stringify(event.data));
+              logger.trace("Got message: " + JSON.stringify(event.data));
               var normalizedMsg = event.data.message.substring(7); // Strip "Event" prefix;
 
               if (normalizedMsg.startsWith("logLevel")) {
                 exports.logLevel = parseInt(event.data.message.substring(16));
-                //logger.trace("Logger set to level " + exports.logLevel); // Loglevels are internal events and not an indication of proper
+                logger.trace("Logger set to level " + exports.logLevel); // Loglevels are internal events and not an indication of proper
                 // initialization so skip rest of handling for log levels.
 
                 return;
@@ -557,7 +555,7 @@
       setTimeout(function () {
         sendCmdWithResult("getversion", null, false).then(function (result) {
           var resultStr = typeof result === "string" || result instanceof String ? result : JSON.stringify(result, null, 2);
-          //logger.trace("getversion returned successfully with : " + resultStr);
+          logger.trace("getversion returned successfully with : " + resultStr);
           sendCmd("logLevel", null, false);
         })["catch"](function (error) {
           logger.error(error);
@@ -576,7 +574,7 @@
        */
 
       function isInstallationOk(installInfo) {
-        var browserSdkVersions = [installInfo.version_browserextension, installInfo.version_chromehost, installInfo.version_jsapi]; // 
+        var browserSdkVersions = [installInfo.version_browserextension, installInfo.version_chromehost, installInfo.version_jsapi]; // Check that we have install information for all components.
 
         if (browserSdkVersions.some(function (v) {
           return !v;
@@ -992,7 +990,7 @@
         apiClientId: apiClientId,
         version_jsapi: apiVersion
       };
-      //logger.trace("Sending command to content script: " + JSON.stringify(msg));
+      logger.trace("Sending command to content script: " + JSON.stringify(msg));
       window.postMessage(msg, "*");
     } else {
       throw new Error("Browser integration not initialized");
@@ -1029,7 +1027,7 @@
           apiClientId: apiClientId,
           version_jsapi: apiVersion
         };
-        //logger.trace("Sending command to content script expecting result: " + JSON.stringify(msg));
+        logger.trace("Sending command to content script expecting result: " + JSON.stringify(msg));
         window.postMessage(msg, "*");
       });
     } else {
