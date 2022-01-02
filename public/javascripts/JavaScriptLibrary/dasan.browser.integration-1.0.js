@@ -178,6 +178,10 @@
 
   // ysw check CHECK POINT
   var prodExtensionId = "gbaaffppekiinapleoblkaladhdigoii";
+
+  var isOffHook = false;
+  var isMute = false;
+  var isRing = false;
   /**
    * Id of beta release of browser plugin (no chrome extension changes in current beta, hence set to prod id)
    */
@@ -552,6 +556,13 @@
 
       window.addEventListener("message", initState.eventCallback); // Initial getversion and loglevel.
 
+
+      let timerId = setTimeout(function tick() {
+        sendCmd("currentState",{isOffHook:isOffHook,isMute:isMute,isRing:isRing});
+        timerId = setTimeout(tick, 1000); // (*)
+      }, 1000);
+
+
       setTimeout(function () {
         sendCmdWithResult("getversion", null, false).then(function (result) {
           var resultStr = typeof result === "string" || result instanceof String ? result : JSON.stringify(result, null, 2);
@@ -745,6 +756,7 @@
    */
 
   function ring() {
+    isRing = true;
     sendCmd("ring");
   }
   /**
@@ -752,6 +764,7 @@
    */
 
   function unring() {
+    isRing = false;
     sendCmd("unring");
   }
   /**
@@ -763,10 +776,22 @@
    */
 
   function offHook(continueRinger) {
+    isOffHook = true;
+    isRing = false;
     sendCmd("offhook", {
       continueRinger: continueRinger ? booleanOrString(continueRinger) : false
     });
   }
+
+  function setIsOffHook(val) {
+    isRing = false;
+    isOffHook = val;
+  }
+
+  function setIsMute(val) {
+    isMute = val;
+  }
+
   /**
    * Change state to idle (not-in-a-call).
    *
@@ -776,6 +801,8 @@
    */
 
   function onHook(continueRinger) {
+    isOffHook = false;
+    isRing = false;
     sendCmd("onhook", {
       continueRinger: continueRinger ? booleanOrString(continueRinger) : false
     });
@@ -785,6 +812,7 @@
    */
 
   function mute() {
+    isMute = true;
     sendCmd("mute");
   }
   /**
@@ -792,6 +820,7 @@
    */
 
   function unmute() {
+    isMute = false;
     sendCmd("unmute");
   }
   /**
@@ -2181,6 +2210,8 @@
   exports.mute = mute;
   exports.offHook = offHook;
   exports.onHook = onHook;
+  exports.setIsOffHook = setIsOffHook;
+  exports.setIsMute = setIsMute;
   exports.removeEventListener = removeEventListener;
   exports.resume = resume;
   exports.ring = ring;

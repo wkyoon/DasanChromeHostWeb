@@ -70,30 +70,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     dasan.addEventListener("mute", (event) => {
+      dasan.setIsMute(true);
       toastr.info("The device requested to be muted");
     });
   
     dasan.addEventListener("unmute", (event) => {
+      dasan.setIsMute(false);
       toastr.info("The device requested to be unmuted");
     });
   
     dasan.addEventListener("device attached", (event) => {
+      dasan.setIsOffHook(false);
+      dasan.setIsMute(false);
       toastr.info("A device was attached");
     });
   
     dasan.addEventListener("device detached", (event) => {
+      dasan.setIsOffHook(false);
+      dasan.setIsMute(false);
       toastr.info("A device was detached");
     });
   
     dasan.addEventListener("acceptcall", (event) => {
+      dasan.setIsOffHook(true);
       toastr.info("Accept call from the device");
     });
   
     dasan.addEventListener("reject", (event) => {
+      dasan.setIsOffHook(false);
+      dasan.setIsMute(false);
       toastr.info("Reject call from the device");
     });
   
     dasan.addEventListener("endcall", (event) => {
+      dasan.setIsOffHook(false);
+      dasan.setIsMute(false);
       toastr.info("End call from the device");
     });
   
@@ -102,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   
     ringBtn.onclick = function () {
-      //console.log("btn ring");
       dasan.ring();
     }
   
