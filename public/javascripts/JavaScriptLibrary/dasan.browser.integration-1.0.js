@@ -777,6 +777,7 @@
 
   function offHook(continueRinger) {
     isOffHook = true;
+    
     isRing = false;
     sendCmd("offhook", {
       continueRinger: continueRinger ? booleanOrString(continueRinger) : false
@@ -802,6 +803,7 @@
 
   function onHook(continueRinger) {
     isOffHook = false;
+    isMute = false;
     isRing = false;
     sendCmd("onhook", {
       continueRinger: continueRinger ? booleanOrString(continueRinger) : false
